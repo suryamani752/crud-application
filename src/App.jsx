@@ -14,6 +14,21 @@ function App() {
   const [right, setRight] = useState(-450);
   const [student, setStudent] = useState([]);
   const [form, setForm] = useState(model);
+  const [searchItem, setSearchItem] = useState("");
+  const [filteredStudent, setFilteredStudent] = useState(student);
+  const [filter, setFilter] = useState(false);
+
+  const searchInputChange = (e) => {
+    const searchTerm = e.target.value;
+    setSearchItem(searchTerm);
+
+    const filterdItems = student.filter((item) =>
+      item.fullname.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    // console.log(filterdItems)
+    setFilter(!filter);
+    setFilteredStudent(filterdItems);
+  };
 
   const handleDrawer = () => {
     setRight(0);
@@ -78,21 +93,38 @@ function App() {
           {" "}
           Crud Application
         </h1>
-        <button
-          onClick={handleDrawer}
-          style={{
-            border: "none",
-            background: "#8407ba",
-            color: "white",
-            padding: "14px 24px",
-            borderRadius: 4,
-            fontSize: 16,
-            margin: "24px 0",
-          }}
-        >
-          <i className="ri-user-add-line" style={{ marginRight: 8 }}></i>
-          Add New Student
-        </button>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <button
+            onClick={handleDrawer}
+            style={{
+              border: "none",
+              background: "#8407ba",
+              color: "white",
+              padding: "14px 24px",
+              borderRadius: 4,
+              fontSize: 16,
+              margin: "24px 0",
+            }}
+          >
+            <i className="ri-user-add-line" style={{ marginRight: 8 }}></i>
+            Add New Student
+          </button>
+          <input
+            style={{
+              border: "1px solid #8407ba",
+              background: "white",
+              color: "black",
+              padding: "14px 14px",
+              borderRadius: 4,
+              fontSize: 16,
+              margin: "24px 0",
+            }}
+            type="text"
+            value={searchItem}
+            onChange={searchInputChange}
+            placeholder="Type to search..."
+          />
+        </div>
         <table className="crud-app">
           <thead>
             <tr>
@@ -106,8 +138,8 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {student.map((item, index) => (
-              <tr>
+            {filter === false ? (student.map((item, index) => (
+              <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{item.fullname}</td>
                 <td>{item.subject}</td>
@@ -146,7 +178,88 @@ function App() {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))) : (filteredStudent.map((item, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{item.fullname}</td>
+                <td>{item.subject}</td>
+                <td>{item.class}</td>
+                <td>{item.roll}</td>
+                <td>{item.dob}</td>
+                <td>
+                  <div>
+                    <button
+                      onClick={() => editStudent(index)}
+                      style={{
+                        border: "none",
+                        width: 32,
+                        height: 32,
+                        background: "#07c65d",
+                        color: "white",
+                        borderRadius: 4,
+                        marginRight: 12,
+                      }}
+                    >
+                      <i className="ri-image-edit-line"></i>
+                    </button>
+                    <button
+                      onClick={() => deleteStudent(index)}
+                      style={{
+                        border: "none",
+                        width: 32,
+                        height: 32,
+                        background: "red",
+                        color: "white",
+                        borderRadius: 4,
+                      }}
+                    >
+                      <i className="ri-delete-bin-6-line"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )))}
+            {/* {student.map((item, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{item.fullname}</td>
+                <td>{item.subject}</td>
+                <td>{item.class}</td>
+                <td>{item.roll}</td>
+                <td>{item.dob}</td>
+                <td>
+                  <div>
+                    <button
+                      onClick={() => editStudent(index)}
+                      style={{
+                        border: "none",
+                        width: 32,
+                        height: 32,
+                        background: "#07c65d",
+                        color: "white",
+                        borderRadius: 4,
+                        marginRight: 12,
+                      }}
+                    >
+                      <i className="ri-image-edit-line"></i>
+                    </button>
+                    <button
+                      onClick={() => deleteStudent(index)}
+                      style={{
+                        border: "none",
+                        width: 32,
+                        height: 32,
+                        background: "red",
+                        color: "white",
+                        borderRadius: 4,
+                      }}
+                    >
+                      <i className="ri-delete-bin-6-line"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))} */}
           </tbody>
         </table>
       </div>
